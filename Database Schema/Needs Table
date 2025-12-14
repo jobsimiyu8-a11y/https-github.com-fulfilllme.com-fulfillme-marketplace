@@ -1,0 +1,14 @@
+CREATE TABLE needs (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    title VARCHAR(200),
+    description TEXT,
+    budget DECIMAL(10,2),
+    location VARCHAR(100),
+    category VARCHAR(50),
+    status ENUM('active', 'fulfilled', 'expired') DEFAULT 'active',
+    contact_methods JSON,
+    photo_url VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);

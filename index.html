@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#228B22">
+    <title>FulfillME.com | You Need It. You Price It. They Fulfill It.</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="icons/icon-192x192.png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i>
+                    <h1>Fulfill<span>ME</span></h1>
+                </div>
+                <button class="menu-toggle" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="pages/browse.html"><i class="fas fa-search"></i> Browse Needs</a></li>
+                <li><a href="#how-it-works"><i class="fas fa-play-circle"></i> How It Works</a></li>
+                <li><a href="pages/dashboard.html"><i class="fas fa-user-circle"></i> Dashboard</a></li>
+                <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li class="auth-buttons">
+                    <a href="pages/login.html" class="btn-login">Login</a>
+                    <a href="pages/register.html" class="btn-register">Sign Up Free</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>You Need It. You Price It. They Fulfill It.</h2>
+            <p>A simple, customer-first marketplace for Kenya and beyond. Post your needs, set your budget, and let providers come to you.</p>
+            
+            <div class="hero-buttons">
+                <a href="pages/post-need.html" class="btn-asker">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>I'm an Asker<br><small>Post Your Need FREE</small></span>
+                </a>
+                <a href="pages/browse.html" class="btn-fulfiller">
+                    <i class="fas fa-search-dollar"></i>
+                    <span>I'm a Fulfiller<br><small>Browse & Earn Money</small></span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-box">
+                <div class="search-input">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search needs by keyword..." id="searchInput">
+                </div>
+                <select id="categorySelect">
+                    <option value="">All Categories</option>
+                    <option value="services">Services</option>
+                    <option value="products">Products</option>
+                    <option value="rentals">Rentals</option>
+                    <option value="pets">Pets & Animals</option>
+                </select>
+                <select id="locationSelect">
+                    <option value="">All Locations</option>
+                    <option value="nairobi">Nairobi</option>
+                    <option value="mombasa">Mombasa</option>
+                    <option value="kisumu">Kisumu</option>
+                    <option value="nakuru">Nakuru</option>
+                </select>
+                <button class="btn-search">Search Needs</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Category Grid -->
+    <section class="categories">
+        <h3>Popular Categories</h3>
+        <div class="category-grid">
+            <a href="pages/browse.html?category=services" class="category-card">
+                <i class="fas fa-tools"></i>
+                <span>Services</span>
+                <small>Plumbing, Cleaning, Events</small>
+            </a>
+            <a href="pages/browse.html?category=products" class="category-card">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Products</span>
+                <small>Phones, Fashion, Electronics</small>
+            </a>
+            <a href="pages/browse.html?category=rentals" class="category-card">
+                <i class="fas fa-car"></i>
+                <span>Rentals</span>
+                <small>Cars, Equipment, Venues</small>
+            </a>
+            <a href="pages/browse.html?category=pets" class="category-card">
+                <i class="fas fa-paw"></i>
+                <span>Pets & Animals</span>
+                <small>Dogs, Goats, Veterinary</small>
+            </a>
+            <a href="pages/browse.html?category=transport" class="category-card">
+                <i class="fas fa-truck"></i>
+                <span>Transport</span>
+                <small>Logistics, Delivery</small>
+            </a>
+            <a href="pages/browse.html?category=other" class="category-card">
+                <i class="fas fa-ellipsis-h"></i>
+                <span>Other Needs</span>
+                <small>All Other Categories</small>
+            </a>
+        </div>
+    </section>
+
+    <!-- Latest Requests -->
+    <section class="latest-requests">
+        <div class="section-header">
+            <h3>Latest Requests in Your Area</h3>
+            <a href="pages/browse.html" class="view-all">View All →</a>
+        </div>
+        
+        <div class="requests-grid" id="latestRequests">
+            <!-- Dynamic content from app.js -->
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <h3>How It Works - Dead Simple</h3>
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-icon asker">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h4>For Askers</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Sign up FREE in 2 minutes</li>
+                    <li><i class="fas fa-check-circle"></i> Post your need with budget</li>
+                    <li><i class="fas fa-check-circle"></i> Stay anonymous until match</li>
+                    <li><i class="fas fa-check-circle"></i> Review offers & choose best</li>
+                    <li><i class="fas fa-check-circle"></i> Pay directly when satisfied</li>
+                </ul>
+            </div>
+            
+            <div class="step">
+                <div class="step-icon fulfiller">
+                    <i class="fas fa-search-dollar"></i>
+                </div>
+                <h4>For Fulfillers</h4>
+                <ul>
+                    <li><i class="fas fa-check-circle"></i> Browse needs for FREE</li>
+                    <li><i class="fas fa-check-circle"></i> Pay KSh 100 to unlock contact</li>
+                    <li><i class="fas fa-check-circle"></i> Send your offer directly</li>
+                    <li><i class="fas fa-check-circle"></i> Get hired & earn money</li>
+                    <li><i class="fas fa-check-circle"></i> Build your reputation</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i>
+                    <h3>Fulfill<span>ME</span></h3>
+                </div>
+                <p>You Need It. You Price It. They Fulfill It.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="pages/browse.html">Browse Needs</a></li>
+                    <li><a href="pages/post-need.html">Post a Need</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Safety Tips</a></li>
+                    <li><a href="#" id="contact">Contact Us</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Download Our App</h4>
+                <p>Get the best experience on mobile</p>
+                <button class="btn-install" id="installButton">
+                    <i class="fas fa-download"></i> Install PWA
+                </button>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2024 FulfillME.com. All rights reserved. | Built with ❤️ for Kenya</p>
+        </div>
+    </footer>
+
+    <!-- Install Prompt -->
+    <div class="install-prompt" id="installPrompt">
+        <div class="install-content">
+            <p>Install FulfillME app for better experience?</p>
+            <div class="install-buttons">
+                <button id="installCancel">Not Now</button>
+                <button id="installConfirm">Install</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+        
+        // Check if app is launched from home screen
+        window.addEventListener('load', () => {
+            if (window.navigator.standalone) {
+                document.body.classList.add('standalone');
+            }
+        });
+    </script>
+</body>
+</html>
