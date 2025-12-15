@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#228B22">
+    <title>Dashboard - FulfillME</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../icons/icon-192x192.png">
+    <style>
+        /* Dashboard specific styles */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-header h2 {
+            color: var(--forest-green);
+            margin-bottom: 0.5rem;
+        }
+        
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+        
+        .dashboard-sidebar {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+        }
+        
+        .user-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .user-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--mint-green), var(--forest-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--white);
+            font-size: 2.5rem;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .user-role {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: var(--soft-pink);
+            color: var(--dark-gray);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-location {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--dark-gray);
+            text-decoration: none;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+        
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
+            background-color: var(--forest-green);
+            color: var(--white);
+        }
+        
+        .sidebar-nav i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .dashboard-main {
+            display: grid;
+            gap: 2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .stat-icon.asker {
+            background-color: var(--mint-green);
+            color: var(--dark-gray);
+        }
+        
+        .stat-icon.fulfiller {
+            background-color: var(--soft-pink);
+            color: var(--dark-gray);
+        }
+        
+        .stat-icon.success {
+            background-color: var(--forest-green);
+            color: var(--white);
+        }
+        
+        .stat-icon.revenue {
+            background-color: #FFD700;
+            color: var(--dark-gray);
+        }
+        
+        .stat-info h3 {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: normal;
+        }
+        
+        .stat-number {
+            margin: 0.25rem 0 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+        
+        .dashboard-section {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header h3 {
+            margin: 0;
+            color: var(--dark-gray);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            text-align: left;
+            padding: 1rem;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background-color: var(--mint-green);
+            color: var(--dark-gray);
+        }
+        
+        .status-pending {
+            background-color: #FFF3CD;
+            color: #856404;
+        }
+        
+        .status-completed {
+            background-color: var(--forest-green);
+            color: var(--white);
+        }
+        
+        .btn-small {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        
+        .btn-view {
+            background-color: var(--forest-green);
+            color: var(--white);
+        }
+        
+        .btn-edit {
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+        }
+        
+        .activity-list {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: var(--light-gray);
+            border-radius: var(--radius);
+        }
+        
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--white);
+            color: var(--forest-green);
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .activity-time {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .quick-action {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--forest-green), #1a6d1a);
+            color: var(--white);
+            border-radius: var(--radius);
+            text-align: center;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .quick-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(34, 139, 34, 0.3);
+        }
+        
+        .quick-action i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i>
+                    <h1>Fulfill<span>ME</span></h1>
+                </div>
+                <button class="menu-toggle" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="browse.html"><i class="fas fa-search"></i> Browse Needs</a></li>
+                <li><a href="../index.html#how-it-works"><i class="fas fa-play-circle"></i> How It Works</a></li>
+                <li><a href="dashboard.html" class="active"><i class="fas fa-user-circle"></i> Dashboard</a></li>
+                <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                <li class="auth-buttons">
+                    <button class="btn-login" id="logoutBtn">Logout</button>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="dashboard-container">
+        <!-- Page Header -->
+        <div class="dashboard-header">
+            <h2>Dashboard</h2>
+            <p>Welcome back, <span id="userName">User</span>!</p>
+        </div>
+        
+        <div class="dashboard-content">
+            <!-- Sidebar -->
+            <aside class="dashboard-sidebar">
+                <div class="user-profile">
+                    <div class="user-avatar-large" id="userAvatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-name" id="userFullName">Loading...</div>
+                    <div class="user-role" id="userRole">Asker</div>
+                    <div class="user-location" id="userLocation">Nairobi, Kenya</div>
+                </div>
+                
+                <ul class="sidebar-nav">
+                    <li><a href="#" class="active" data-tab="overview">
+                        <i class="fas fa-tachometer-alt"></i> Overview
+                    </a></li>
+                    <li><a href="#" data-tab="needs">
+                        <i class="fas fa-bullhorn"></i> My Needs
+                    </a></li>
+                    <li><a href="#" data-tab="offers">
+                        <i class="fas fa-handshake"></i> Offers
+                    </a></li>
+                    <li><a href="#" data-tab="transactions">
+                        <i class="fas fa-money-bill-wave"></i> Transactions
+                    </a></li>
+                    <li><a href="#" data-tab="saved">
+                        <i class="far fa-bookmark"></i> Saved Needs
+                    </a></li>
+                    <li><a href="#" data-tab="profile">
+                        <i class="fas fa-user-cog"></i> Profile
+                    </a></li>
+                </ul>
+            </aside>
+            
+            <!-- Main Content Area -->
+            <div class="dashboard-main">
+                <!-- Overview Tab -->
+                <div class="dashboard-tab active" id="overviewTab">
+                    <!-- Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon asker">
+                                <i class="fas fa-bullhorn"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Active Needs</h3>
+                                <p class="stat-number" id="activeNeeds">0</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon fulfiller">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Total Offers</h3>
+                                <p class="stat-number" id="totalOffers">0</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Completed</h3>
+                                <p class="stat-number" id="completedNeeds">0</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon revenue">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Total Value</h3>
+                                <p class="stat-number" id="totalValue">KSh 0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h3>Quick Actions</h3>
+                        </div>
+                        <div class="quick-actions">
+                            <a href="post-need.html" class="quick-action">
+                                <i class="fas fa-plus-circle"></i>
+                                <span>Post New Need</span>
+                            </a>
+                            <a href="browse.html" class="quick-action">
+                                <i class="fas fa-search"></i>
+                                <span>Browse Needs</span>
+                            </a>
+                            <a href="#" class="quick-action" id="addCreditsBtn">
+                                <i class="fas fa-coins"></i>
+                                <span>Add Credits</span>
+                            </a>
+                            <a href="profile.html" class="quick-action">
+                                <i class="fas fa-user-edit"></i>
+                                <span>Edit Profile</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Activity -->
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h3>Recent Activity</h3>
+                        </div>
+                        <div class="activity-list" id="recentActivity">
+                            <!-- Activity will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- My Needs Tab -->
+                <div class="dashboard-tab" id="needsTab">
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h3>My Posted Needs</h3>
+                            <a href="post-need.html" class="btn-register">
+                                <i class="fas fa-plus"></i> Post New Need
+                            </a>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Budget</th>
+                                        <th>Status</th>
+                                        <th>Offers</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="needsTable">
+                                    <!-- Needs will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Offers Tab -->
+                <div class="dashboard-tab" id="offersTab">
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h3>Received Offers</h3>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Need</th>
+                                        <th>Fulfiller</th>
+                                        <th>Offer Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="offersTable">
+                                    <!-- Offers will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Other tabs similar structure -->
+                <!-- Add more tab content as needed -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <!-- Same as index.html footer -->
+        </div>
+    </footer>
+
+    <script src="../app.js"></script>
+    <script>
+        class Dashboard {
+            constructor() {
+                this.currentTab = 'overview';
+                this.user = null;
+                this.init();
+            }
+            
+            init() {
+                this.checkAuth();
+                this.loadUserData();
+                this.setupEventListeners();
+                this.loadDashboardData();
+                this.setupTabNavigation();
+            }
+            
+            checkAuth() {
+                const user = JSON.parse(localStorage.getItem('fulfillme_user'));
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                this.user = user;
+            }
+            
+            loadUserData() {
+                if (this.user) {
+                    document.getElementById('userName').textContent = this.user.fullName || this.user.email;
+                    document.getElementById('userFullName').textContent = this.user.fullName || this.user.email;
+                    document.getElementById('userRole').textContent = this.user.userType === 'asker' ? 'Asker' : 'Fulfiller';
+                    document.getElementById('userLocation').textContent = this.user.location || 'Not specified';
+                    
+                    // Set avatar initials
+                    const avatar = document.getElementById('userAvatar');
+                    if (this.user.fullName) {
+                        const initials = this.user.fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+                        avatar.innerHTML = `<span style="font-weight: 600;">${initials}</span>`;
+                    }
+                }
+            }
+            
+            setupEventListeners() {
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    localStorage.removeItem('fulfillme_user');
+                    window.location.href = '../index.html';
+                });
+                
+                document.getElementById('addCreditsBtn')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showAddCreditsModal();
+                });
+            }
+            
+            setupTabNavigation() {
+                document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const tab = link.dataset.tab;
+                        this.switchTab(tab);
+                        
+                        // Update active state
+                        document.querySelectorAll('.sidebar-nav a').forEach(a => {
+                            a.classList.remove('active');
+                        });
+                        link.classList.add('active');
+                    });
+                });
+            }
+            
+            switchTab(tab) {
+                this.currentTab = tab;
+                
+                // Hide all tabs
+                document.querySelectorAll('.dashboard-tab').forEach(t => {
+                    t.classList.remove('active');
+                });
+                
+                // Show selected tab
+                const tabElement = document.getElementById(`${tab}Tab`);
+                if (tabElement) {
+                    tabElement.classList.add('active');
+                }
+                
+                // Load tab-specific data
+                switch(tab) {
+                    case 'needs':
+                        this.loadMyNeeds();
+                        break;
+                    case 'offers':
+                        this.loadOffers();
+                        break;
+                    case 'transactions':
+                        this.loadTransactions();
+                        break;
+                    case 'saved':
+                        this.loadSavedNeeds();
+                        break;
+                    case 'profile':
+                        this.loadProfile();
+                        break;
+                }
+            }
+            
+            loadDashboardData() {
+                // Load stats
+                const needs = JSON.parse(localStorage.getItem('fulfillme_needs') || '[]');
+                const userNeeds = needs.filter(n => n.userId === this.user?.id);
+                
+                document.getElementById('activeNeeds').textContent = 
+                    userNeeds.filter(n => n.status === 'active').length;
+                document.getElementById('totalOffers').textContent = 
+                    userNeeds.reduce((sum, need) => sum + (need.offers || 0), 0);
+                document.getElementById('completedNeeds').textContent = 
+                    userNeeds.filter(n => n.status === 'completed').length;
+                document.getElementById('totalValue').textContent = 
+                    'KSh ' + userNeeds.reduce((sum, need) => sum + (need.budget || 0), 0).toLocaleString();
+                
+                // Load recent activity
+                this.loadRecentActivity();
+            }
+            
+            loadRecentActivity() {
+                const activities = [
+                    { icon: 'fa-bullhorn', title: 'Posted a new need', time: '2 hours ago', color: '#98FF98' },
+                    { icon: 'fa-handshake', title: 'Received an offer', time: '1 day ago', color: '#FFB6C1' },
+                    { icon: 'fa-check-circle', title: 'Need completed', time: '3 days ago', color: '#228B22' },
+                    { icon: 'fa-star', title: 'Received 5-star rating', time: '1 week ago', color: '#FFD700' }
+                ];
+                
+                const container = document.getElementById('recentActivity');
+                container.innerHTML = activities.map(activity => `
+                    <div class="activity-item">
+                        <div class="activity-icon" style="background-color: ${activity.color}">
+                            <i class="fas ${activity.icon}"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">${activity.title}</div>
+                            <div class="activity-time">${activity.time}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            loadMyNeeds() {
+                const needs = JSON.parse(localStorage.getItem('fulfillme_needs') || '[]');
+                const userNeeds = needs.filter(n => n.userId === this.user?.id);
+                
+                const table = document.getElementById('needsTable');
+                if (userNeeds.length === 0) {
+                    table.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 2rem;">
+                                <p>You haven't posted any needs yet.</p>
+                                <a href="post-need.html" class="btn-register" style="display: inline-block; margin-top: 1rem;">
+                                    Post Your First Need
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                table.innerHTML = userNeeds.map(need => `
+                    <tr>
+                        <td>${need.title}</td>
+                        <td>KSh ${need.budget?.toLocaleString() || '0'}</td>
+                        <td>
+                            <span class="status-badge ${need.status === 'active' ? 'status-active' : 
+                                                         need.status === 'completed' ? 'status-completed' : 'status-pending'}">
+                                ${need.status?.toUpperCase() || 'ACTIVE'}
+                            </span>
+                        </td>
+                        <td>${need.offers || 0}</td>
+                        <td>
+                            <button class="btn-small btn-view" onclick="dashboard.viewNeed(${need.id})">
+                                View
+                            </button>
+                            <button class="btn-small btn-edit" onclick="dashboard.editNeed(${need.id})">
+                                Edit
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            loadOffers() {
+                // Load offers data
+                const container = document.getElementById('offersTable');
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            <p>No offers received yet.</p>
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            viewNeed(needId) {
+                // Navigate to need details
+                localStorage.setItem('viewingNeed', needId);
+                window.location.href = 'need-details.html';
+            }
+            
+            editNeed(needId) {
+                // Edit need functionality
+                alert('Edit need functionality coming soon!');
+            }
+            
+            showAddCreditsModal() {
+                alert('Add credits functionality coming soon!');
+            }
+        }
+        
+        // Initialize dashboard
+        const dashboard = new Dashboard();
+        window.dashboard = dashboard;
+    </script>
+</body>
+</html>

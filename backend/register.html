@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#228B22">
+    <title>Sign Up Free - FulfillME</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../icons/icon-192x192.png">
+    <style>
+        /* Registration specific styles */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 200px);
+            padding: 2rem 1rem;
+        }
+        
+        .auth-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .auth-header h2 {
+            color: var(--forest-green);
+            margin-bottom: 0.5rem;
+        }
+        
+        .auth-header p {
+            color: #666;
+        }
+        
+        .role-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .role-card {
+            padding: 1.5rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .role-card:hover {
+            border-color: var(--forest-green);
+        }
+        
+        .role-card.selected {
+            border-color: var(--forest-green);
+            background-color: rgba(34, 139, 34, 0.1);
+        }
+        
+        .role-card i {
+            font-size: 2rem;
+            color: var(--forest-green);
+            margin-bottom: 1rem;
+        }
+        
+        .role-card h4 {
+            margin: 0 0 0.5rem;
+            color: var(--dark-gray);
+        }
+        
+        .role-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--forest-green);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        
+        .category-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .category-checkbox:hover {
+            border-color: var(--forest-green);
+        }
+        
+        .category-checkbox input[type="checkbox"] {
+            margin: 0;
+        }
+        
+        .btn-register-submit {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--forest-green);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem 0 1.5rem;
+        }
+        
+        .btn-register-submit:hover {
+            background-color: #1a6d1a;
+        }
+        
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .terms-checkbox input[type="checkbox"] {
+            margin-top: 0.25rem;
+        }
+        
+        .terms-checkbox label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: normal;
+        }
+        
+        .terms-checkbox a {
+            color: var(--forest-green);
+            text-decoration: none;
+        }
+        
+        .terms-checkbox a:hover {
+            text-decoration: underline;
+        }
+        
+        .auth-footer {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .auth-footer a {
+            color: var(--forest-green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            background-color: #ffcccc;
+            color: #cc0000;
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .success-message {
+            background-color: var(--mint-green);
+            color: var(--dark-gray);
+            padding: 0.75rem;
+            border-radius: var(--radius);
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 5px;
+            background-color: var(--light-gray);
+            border-radius: 2.5px;
+            overflow: hidden;
+        }
+        
+        .strength-meter {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .strength-weak { background-color: #ff4444; }
+        .strength-fair { background-color: #ffbb33; }
+        .strength-good { background-color: #00C851; }
+        .strength-strong { background-color: var(--forest-green); }
+        
+        .password-hints {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--light-gray);
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .step.active .step-number {
+            background-color: var(--forest-green);
+            color: var(--white);
+        }
+        
+        .step-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .step.active .step-label {
+            color: var(--forest-green);
+            font-weight: 600;
+        }
+        
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background-color: var(--light-gray);
+            max-width: 50px;
+        }
+        
+        .form-step {
+            display: none;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .btn-prev,
+        .btn-next {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .btn-prev {
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+        }
+        
+        .btn-next {
+            background-color: var(--forest-green);
+            color: var(--white);
+        }
+        
+        @media (max-width: 768px) {
+            .role-selection {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .categories-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .step-indicator {
+                flex-wrap: wrap;
+            }
+            
+            .step-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i>
+                    <h1>Fulfill<span>ME</span></h1>
+                </div>
+                <button class="menu-toggle" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="browse.html"><i class="fas fa-search"></i> Browse Needs</a></li>
+                <li><a href="../index.html#how-it-works"><i class="fas fa-play-circle"></i> How It Works</a></li>
+                <li><a href="dashboard.html"><i class="fas fa-user-circle"></i> Dashboard</a></li>
+                <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                <li class="auth-buttons">
+                    <a href="login.html" class="btn-login">Login</a>
+                    <a href="register.html" class="btn-register active">Sign Up Free</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="auth-container">
+        <div class="auth-card">
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Role</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Details</div>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Complete</div>
+                </div>
+            </div>
+            
+            <!-- Error/Success Messages -->
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+            
+            <div class="auth-header">
+                <h2>Create Your Account</h2>
+                <p>Join FulfillME in less than 2 minutes</p>
+            </div>
+            
+            <!-- Step 1: Role Selection -->
+            <div class="form-step active" id="step1">
+                <div class="role-selection">
+                    <div class="role-card" data-role="asker">
+                        <i class="fas fa-bullhorn"></i>
+                        <h4>I'm an Asker</h4>
+                        <p>I want to post my needs for free</p>
+                    </div>
+                    <div class="role-card" data-role="fulfiller">
+                        <i class="fas fa-search-dollar"></i>
+                        <h4>I'm a Fulfiller</h4>
+                        <p>I want to fulfill needs and earn money</p>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="selectedRole" value="">
+                
+                <button class="btn-register-submit" id="nextStep1" disabled>
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <!-- Step 2: Registration Form -->
+            <div class="form-step" id="step2">
+                <form id="registrationForm">
+                    <!-- Common Fields -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" required placeholder="0712345678">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="location">Location (City/Town) *</label>
+                            <input type="text" id="location" required placeholder="Nairobi">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gender">Gender *</label>
+                            <select id="gender" required>
+                                <option value="">Select gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="prefer-not-to-say">Prefer not to say</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" id="idNumberGroup">
+                            <label for="nationalId">National ID Number</label>
+                            <input type="text" id="nationalId" placeholder="Optional for now">
+                            <small style="font-size: 0.85rem; color: #666;">Required for verification (optional during registration)</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Fulfiller Specific Fields -->
+                    <div class="form-group" id="categoriesGroup" style="display: none;">
+                        <label>Categories You Serve (Select all that apply)</label>
+                        <div class="categories-grid" id="categoriesGrid">
+                            <!-- Categories will be loaded by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <!-- Asker Specific Fields -->
+                    <div class="form-group" id="askerDescriptionGroup" style="display: none;">
+                        <label for="askerDescription">Tell us about your typical needs</label>
+                        <textarea id="askerDescription" rows="3" placeholder="e.g., I often need home services, electronics, and transport services"></textarea>
+                    </div>
+                    
+                    <!-- Password -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">Password *</label>
+                            <input type="password" id="password" required minlength="6">
+                            <div class="password-strength">
+                                <div class="strength-meter" id="strengthMeter"></div>
+                            </div>
+                            <div class="password-hints">
+                                At least 6 characters with letters and numbers
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password *</label>
+                            <input type="password" id="confirmPassword" required>
+                        </div>
+                    </div>
+                    
+                    <div class="terms-checkbox">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">
+                            I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> *
+                        </label>
+                    </div>
+                    
+                    <div class="form-navigation">
+                        <button type="button" class="btn-prev" id="prevStep2">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button type="submit" class="btn-next">
+                            Create Account <i class="fas fa-check"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Step 3: Success -->
+            <div class="form-step" id="step3">
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; color: var(--forest-green); margin-bottom: 1rem;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 style="color: var(--forest-green); margin-bottom: 1rem;">Account Created Successfully!</h3>
+                    <p id="successMessageText" style="margin-bottom: 2rem;">Welcome to FulfillME!</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <a href="dashboard.html" class="btn-register-submit" style="width: auto;">
+                            <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+                        </a>
+                        <a href="browse.html" class="btn-login" style="width: auto;">
+                            <i class="fas fa-search"></i> Browse Needs
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Login here</a></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <!-- Same as index.html footer -->
+        </div>
+    </footer>
+
+    <script src="../app.js"></script>
+    <script>
+        class RegisterPage {
+            constructor() {
+                this.currentStep = 1;
+                this.selectedRole = '';
+                this.init();
+            }
+            
+            init() {
+                this.loadCategories();
+                this.setupEventListeners();
+                this.setupPasswordStrength();
+            }
+            
+            loadCategories() {
+                const categories = [
+                    { id: 'plumbing', name: 'Plumbing', icon: 'fa-wrench' },
+                    { id: 'electrical', name: 'Electrical', icon: 'fa-bolt' },
+                    { id: 'cleaning', name: 'Cleaning', icon: 'fa-broom' },
+                    { id: 'tutoring', name: 'Tutoring', icon: 'fa-graduation-cap' },
+                    { id: 'transport', name: 'Transport', icon: 'fa-truck' },
+                    { id: 'events', name: 'Events', icon: 'fa-calendar' },
+                    { id: 'beauty', name: 'Beauty', icon: 'fa-spa' },
+                    { id: 'fitness', name: 'Fitness', icon: 'fa-dumbbell' },
+                    { id: 'pets', name: 'Pets', icon: 'fa-paw' },
+                    { id: 'tech', name: 'Tech Services', icon: 'fa-laptop' },
+                    { id: 'legal', name: 'Legal', icon: 'fa-gavel' },
+                    { id: 'other', name: 'Other', icon: 'fa-ellipsis-h' }
+                ];
+                
+                const grid = document.getElementById('categoriesGrid');
+                grid.innerHTML = categories.map(cat => `
+                    <label class="category-checkbox">
+                        <input type="checkbox" name="category" value="${cat.id}">
+                        <i class="fas ${cat.icon}"></i>
+                        <span>${cat.name}</span>
+                    </label>
+                `).join('');
+            }
+            
+            setupEventListeners() {
+                // Role selection
+                document.querySelectorAll('.role-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        this.selectRole(card.dataset.role);
+                    });
+                });
+                
+                // Next button for step 1
+                document.getElementById('nextStep1').addEventListener('click', () => {
+                    this.goToStep(2);
+                });
+                
+                // Previous button for step 2
+                document.getElementById('prevStep2').addEventListener('click', () => {
+                    this.goToStep(1);
+                });
+                
+                // Form submission
+                document.getElementById('registrationForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleRegistration();
+                });
+                
+                // Real-time role validation
+                document.getElementById('selectedRole').addEventListener('change', (e) => {
+                    this.toggleRoleSpecificFields();
+                });
+            }
+            
+            setupPasswordStrength() {
+                const passwordInput = document.getElementById('password');
+                const strengthMeter = document.getElementById('strengthMeter');
+                
+                passwordInput.addEventListener('input', () => {
+                    const password = passwordInput.value;
+                    let strength = 0;
+                    
+                    // Length check
+                    if (password.length >= 6) strength += 25;
+                    if (password.length >= 8) strength += 25;
+                    
+                    // Complexity checks
+                    if (/[A-Z]/.test(password)) strength += 25;
+                    if (/[0-9]/.test(password)) strength += 25;
+                    if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+                    
+                    // Cap at 100
+                    strength = Math.min(strength, 100);
+                    
+                    // Update meter
+                    strengthMeter.style.width = strength + '%';
+                    
+                    // Update color
+                    if (strength < 25) {
+                        strengthMeter.className = 'strength-meter strength-weak';
+                    } else if (strength < 50) {
+                        strengthMeter.className = 'strength-meter strength-fair';
+                    } else if (strength < 75) {
+                        strengthMeter.className = 'strength-meter strength-good';
+                    } else {
+                        strengthMeter.className = 'strength-meter strength-strong';
+                    }
+                });
+            }
+            
+            selectRole(role) {
+                this.selectedRole = role;
+                document.getElementById('selectedRole').value = role;
+                
+                // Update UI
+                document.querySelectorAll('.role-card').forEach(card => {
+                    card.classList.remove('selected');
+                    if (card.dataset.role === role) {
+                        card.classList.add('selected');
+                    }
+                });
+                
+                // Enable next button
+                document.getElementById('nextStep1').disabled = false;
+                
+                // Update role-specific fields visibility
+                this.toggleRoleSpecificFields();
+            }
+            
+            toggleRoleSpecificFields() {
+                const role = this.selectedRole;
+                const categoriesGroup = document.getElementById('categoriesGroup');
+                const askerDescriptionGroup = document.getElementById('askerDescriptionGroup');
+                const idNumberGroup = document.getElementById('idNumberGroup');
+                
+                if (role === 'fulfiller') {
+                    categoriesGroup.style.display = 'block';
+                    askerDescriptionGroup.style.display = 'none';
+                    idNumberGroup.style.display = 'none';
+                } else if (role === 'asker') {
+                    categoriesGroup.style.display = 'none';
+                    askerDescriptionGroup.style.display = 'block';
+                    idNumberGroup.style.display = 'block';
+                } else {
+                    categoriesGroup.style.display = 'none';
+                    askerDescriptionGroup.style.display = 'none';
+                    idNumberGroup.style.display = 'block';
+                }
+            }
+            
+            goToStep(step) {
+                // Hide all steps
+                document.querySelectorAll('.form-step').forEach(s => {
+                    s.classList.remove('active');
+                });
+                
+                // Update step indicator
+                document.querySelectorAll('.step').forEach(s => {
+                    s.classList.remove('active');
+                    if (parseInt(s.dataset.step) === step) {
+                        s.classList.add('active');
+                    }
+                });
+                
+                // Show target step
+                document.getElementById(`step${step}`).classList.add('active');
+                this.currentStep = step;
+            }
+            
+            handleRegistration() {
+                // Get form values
+                const role = this.selectedRole;
+                const fullName = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const location = document.getElementById('location').value.trim();
+                const gender = document.getElementById('gender').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                // Validation
+                if (!role || !fullName || !email || !phone || !location || !gender || !password || !confirmPassword) {
+                    this.showError('Please fill in all required fields');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    this.showError('Passwords do not match');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    this.showError('Password must be at least 6 characters');
+                    return;
+                }
+                
+                if (!document.getElementById('terms').checked) {
+                    this.showError('You must agree to the terms and conditions');
+                    return;
+                }
+                
+                // Get role-specific data
+                let categories = [];
+                let description = '';
+                let nationalId = '';
+                
+                if (role === 'fulfiller') {
+                    const selectedCategories = document.querySelectorAll('input[name="category"]:checked');
+                    categories = Array.from(selectedCategories).map(cb => cb.value);
+                    
+                    if (categories.length === 0) {
+                        this.showError('Please select at least one category you serve');
+                        return;
+                    }
+                } else if (role === 'asker') {
+                    description = document.getElementById('askerDescription').value.trim();
+                    nationalId = document.getElementById('nationalId').value.trim();
+                }
+                
+                // Create user object
+                const user = {
+                    id: Date.now(),
+                    role: role,
+                    fullName: fullName,
+                    email: email,
+                    phone: phone,
+                    location: location,
+                    gender: gender,
+                    password: password, // In production, hash this
+                    categories: categories,
+                    description: description,
+                    nationalId: nationalId,
+                    createdAt: new Date().toISOString(),
+                    credits: role === 'fulfiller' ? 0 : null,
+                    rating: 5.0,
+                    completedJobs: 0
+                };
+                
+                // Save user
+                this.saveUser(user);
+            }
+            
+            saveUser(user) {
+                // Check if user already exists
+                const users = JSON.parse(localStorage.getItem('fulfillme_users') || '[]');
+                const existingUser = users.find(u => u.email === user.email || u.phone === user.phone);
+                
+                if (existingUser) {
+                    this.showError('An account with this email or phone already exists');
+                    return;
+                }
+                
+                // Add user
+                users.push(user);
+                localStorage.setItem('fulfillme_users', JSON.stringify(users));
+                
+                // Set as current user
+                localStorage.setItem('fulfillme_user', JSON.stringify(user));
+                
+                // Update app state
+                if (window.app) {
+                    window.app.currentUser = user;
+                    window.app.updateUIForUser();
+                }
+                
+                // Show success
+                this.showSuccess(user);
+            }
+            
+            showSuccess(user) {
+                // Update success message
+                const successText = user.role === 'asker' 
+                    ? 'You can now post your needs for free and let fulfilllers come to you!'
+                    : 'You can now browse needs and pay KSh 100 to unlock contact details!';
+                
+                document.getElementById('successMessageText').textContent = successText;
+                
+                // Go to step 3
+                this.goToStep(3);
+                
+                // Show welcome notification
+                setTimeout(() => {
+                    if ('Notification' in window && Notification.permission === 'granted') {
+                        new Notification('Welcome to FulfillME!', {
+                            body: `Welcome ${user.fullName}! Start ${user.role === 'asker' ? 'posting' : 'browsing'} needs now.`,
+                            icon: '../icons/icon-192x192.png'
+                        });
+                    }
+                }, 1000);
+            }
+            
+            showError(message) {
+                const errorDiv = document.getElementById('errorMessage');
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Hide after 5 seconds
+                setTimeout(() => {
+                    errorDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+        
+        // Initialize registration page
+        const registerPage = new RegisterPage();
+        window.registerPage = registerPage;
+    </script>
+</body>
+</html>

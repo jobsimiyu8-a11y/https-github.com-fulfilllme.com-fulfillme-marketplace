@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#228B22">
+    <title>Browse Needs - FulfillME</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="manifest" href="../manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="../icons/icon-192x192.png">
+    <style>
+        /* Browse page specific styles */
+        .filters-section {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+        
+        .filter-group select {
+            padding: 0.75rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+            background-color: var(--white);
+        }
+        
+        .budget-range {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .budget-range input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+        }
+        
+        .sort-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .sort-select {
+            padding: 0.5rem;
+            border: 1px solid var(--light-gray);
+            border-radius: var(--radius);
+        }
+        
+        .needs-count {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .needs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .need-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .need-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .need-status {
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+        
+        .status-active {
+            background-color: var(--mint-green);
+            color: var(--dark-gray);
+        }
+        
+        .status-urgent {
+            background-color: #ffcccc;
+            color: #cc0000;
+        }
+        
+        .need-content {
+            padding: 1.5rem;
+        }
+        
+        .need-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .need-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+        }
+        
+        .need-budget {
+            background-color: var(--soft-pink);
+            color: var(--dark-gray);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        
+        .need-description {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .need-details {
+            display: grid;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .need-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .need-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-unlock {
+            flex: 1;
+            padding: 0.75rem;
+            background-color: var(--forest-green);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-unlock:hover {
+            background-color: #1a6d1a;
+        }
+        
+        .btn-save {
+            padding: 0.75rem;
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .btn-save:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .pagination button {
+            padding: 0.5rem 1rem;
+            background-color: var(--white);
+            border: 2px solid var(--light-gray);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .pagination button:hover:not(:disabled) {
+            border-color: var(--forest-green);
+            color: var(--forest-green);
+        }
+        
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .page-numbers {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .page-number {
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .page-number.active {
+            background-color: var(--forest-green);
+            color: var(--white);
+        }
+        
+        .page-number:hover:not(.active) {
+            background-color: var(--light-gray);
+        }
+        
+        .no-needs {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i>
+                    <h1>Fulfill<span>ME</span></h1>
+                </div>
+                <button class="menu-toggle" aria-label="Menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="../index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="browse.html" class="active"><i class="fas fa-search"></i> Browse Needs</a></li>
+                <li><a href="../index.html#how-it-works"><i class="fas fa-play-circle"></i> How It Works</a></li>
+                <li><a href="dashboard.html"><i class="fas fa-user-circle"></i> Dashboard</a></li>
+                <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                <li class="auth-buttons">
+                    <a href="login.html" class="btn-login">Login</a>
+                    <a href="register.html" class="btn-register">Sign Up Free</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2>Browse Needs</h2>
+                <p>Find needs you can fulfill and earn money. Pay KSh 100 to unlock contact details.</p>
+            </div>
+            
+            <!-- Filters -->
+            <section class="filters-section">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="category"><i class="fas fa-tag"></i> Category</label>
+                        <select id="category">
+                            <option value="">All Categories</option>
+                            <option value="services">Services</option>
+                            <option value="products">Products</option>
+                            <option value="rentals">Rentals</option>
+                            <option value="pets">Pets & Animals</option>
+                            <option value="transport">Transport</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="location"><i class="fas fa-map-marker-alt"></i> Location</label>
+                        <select id="location">
+                            <option value="">All Locations</option>
+                            <option value="nairobi">Nairobi</option>
+                            <option value="mombasa">Mombasa</option>
+                            <option value="kisumu">Kisumu</option>
+                            <option value="nakuru">Nakuru</option>
+                            <option value="eldoret">Eldoret</option>
+                            <option value="thika">Thika</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label><i class="fas fa-money-bill-wave"></i> Budget Range (KES)</label>
+                        <div class="budget-range">
+                            <input type="number" id="minBudget" placeholder="Min" min="0">
+                            <span>to</span>
+                            <input type="number" id="maxBudget" placeholder="Max" min="0">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="sort"><i class="fas fa-sort-amount-down"></i> Sort By</label>
+                        <select id="sort">
+                            <option value="newest">Newest First</option>
+                            <option value="budget_high">Budget (High to Low)</option>
+                            <option value="budget_low">Budget (Low to High)</option>
+                            <option value="urgent">Urgent Needs</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="timeframe"><i class="far fa-clock"></i> Timeframe</label>
+                        <select id="timeframe">
+                            <option value="">Any Time</option>
+                            <option value="today">Today</option>
+                            <option value="tomorrow">Tomorrow</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>&nbsp;</label>
+                        <button id="applyFilters" class="btn-search">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="sort-options">
+                    <span class="needs-count" id="needsCount">Loading needs...</span>
+                    <div>
+                        <select class="sort-select" id="itemsPerPage">
+                            <option value="9">9 per page</option>
+                            <option value="18">18 per page</option>
+                            <option value="30">30 per page</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Needs Grid -->
+            <div class="needs-grid" id="needsGrid">
+                <!-- Needs will be loaded here -->
+            </div>
+            
+            <!-- No Needs Message -->
+            <div class="no-needs" id="noNeeds" style="display: none;">
+                <i class="fas fa-search fa-3x" style="color: #ccc; margin-bottom: 1rem;"></i>
+                <h3>No needs found</h3>
+                <p>Try adjusting your filters or check back later for new needs.</p>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+                <!-- Pagination will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <!-- Same as index.html footer -->
+        </div>
+    </footer>
+
+    <!-- Unlock Modal -->
+    <div class="modal" id="unlockModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Unlock Contact Details</h3>
+                <button class="modal-close" id="closeUnlockModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>To view contact details and respond to this need, you need to pay KSh 100.</p>
+                <div class="payment-methods">
+                    <div class="payment-method active">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>M-Pesa</span>
+                    </div>
+                    <div class="payment-method">
+                        <i class="fab fa-paypal"></i>
+                        <span>PayPal</span>
+                    </div>
+                </div>
+                <div class="payment-instructions">
+                    <h4>M-Pesa Instructions:</h4>
+                    <ol>
+                        <li>Go to M-Pesa menu</li>
+                        <li>Select "Lipa Na M-Pesa"</li>
+                        <li>Enter Paybill: 247247</li>
+                        <li>Account: FULFILLME</li>
+                        <li>Amount: 100</li>
+                    </ol>
+                </div>
+                <div class="form-group">
+                    <label for="mpesaCode">Enter M-Pesa Transaction Code:</label>
+                    <input type="text" id="mpesaCode" placeholder="e.g., QW12ER34T5">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelUnlock">Cancel</button>
+                <button class="btn-confirm" id="confirmUnlock">
+                    <i class="fas fa-unlock"></i> Confirm Unlock
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../app.js"></script>
+    <script>
+        // Browse page functionality
+        class BrowsePage {
+            constructor() {
+                this.currentPage = 1;
+                this.itemsPerPage = 9;
+                this.needs = [];
+                this.filteredNeeds = [];
+                this.init();
+            }
+            
+            init() {
+                this.loadNeeds();
+                this.setupEventListeners();
+                this.setupFilters();
+            }
+            
+            loadNeeds() {
+                // Load from localStorage or use sample data
+                const savedNeeds = localStorage.getItem('fulfillme_needs');
+                if (savedNeeds) {
+                    this.needs = JSON.parse(savedNeeds);
+                } else {
+                    // Sample data
+                    this.needs = [
+                        {
+                            id: 1,
+                            title: "Plumber for kitchen sink",
+                            description: "Need a plumber to fix leaking kitchen sink in Nairobi West area",
+                            budget: 1000,
+                            location: "Nairobi",
+                            category: "services",
+                            timeframe: "tomorrow",
+                            urgent: true,
+                            posted: "2024-01-15T10:30:00",
+                            user: { name: "John D.", avatar: "JD" }
+                        },
+                        {
+                            id: 2,
+                            title: "Used laptop under KSh 15,000",
+                            description: "Looking for a used laptop in good condition for student use",
+                            budget: 15000,
+                            location: "Kisumu",
+                            category: "products",
+                            timeframe: "week",
+                            urgent: false,
+                            posted: "2024-01-14T14:20:00",
+                            user: { name: "Sarah M.", avatar: "SM" }
+                        },
+                        // Add more sample needs...
+                    ];
+                    localStorage.setItem('fulfillme_needs', JSON.stringify(this.needs));
+                }
+                
+                this.filteredNeeds = [...this.needs];
+                this.renderNeeds();
+                this.renderPagination();
+            }
+            
+            setupEventListeners() {
+                document.getElementById('applyFilters').addEventListener('click', () => this.applyFilters());
+                document.getElementById('itemsPerPage').addEventListener('change', (e) => {
+                    this.itemsPerPage = parseInt(e.target.value);
+                    this.currentPage = 1;
+                    this.renderNeeds();
+                    this.renderPagination();
+                });
+                
+                // Modal
+                document.getElementById('closeUnlockModal').addEventListener('click', () => this.hideModal());
+                document.getElementById('cancelUnlock').addEventListener('click', () => this.hideModal());
+                document.getElementById('confirmUnlock').addEventListener('click', () => this.confirmUnlock());
+                
+                // Close modal on outside click
+                document.getElementById('unlockModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'unlockModal') {
+                        this.hideModal();
+                    }
+                });
+            }
+            
+            setupFilters() {
+                // Add real-time filter updates
+                ['category', 'location', 'sort', 'timeframe'].forEach(id => {
+                    document.getElementById(id).addEventListener('change', () => this.applyFilters());
+                });
+                
+                ['minBudget', 'maxBudget'].forEach(id => {
+                    document.getElementById(id).addEventListener('input', () => this.applyFilters());
+                });
+            }
+            
+            applyFilters() {
+                const category = document.getElementById('category').value;
+                const location = document.getElementById('location').value;
+                const sort = document.getElementById('sort').value;
+                const timeframe = document.getElementById('timeframe').value;
+                const minBudget = parseInt(document.getElementById('minBudget').value) || 0;
+                const maxBudget = parseInt(document.getElementById('maxBudget').value) || Infinity;
+                
+                this.filteredNeeds = this.needs.filter(need => {
+                    // Category filter
+                    if (category && need.category !== category) return false;
+                    
+                    // Location filter
+                    if (location && need.location.toLowerCase() !== location.toLowerCase()) return false;
+                    
+                    // Budget filter
+                    if (need.budget < minBudget || need.budget > maxBudget) return false;
+                    
+                    // Timeframe filter
+                    if (timeframe) {
+                        // Simplified timeframe logic
+                        if (timeframe === 'today' && need.timeframe !== 'today') return false;
+                        if (timeframe === 'tomorrow' && need.timeframe !== 'tomorrow') return false;
+                    }
+                    
+                    return true;
+                });
+                
+                // Sort
+                this.sortNeeds(sort);
+                
+                this.currentPage = 1;
+                this.renderNeeds();
+                this.renderPagination();
+            }
+            
+            sortNeeds(sortType) {
+                switch(sortType) {
+                    case 'newest':
+                        this.filteredNeeds.sort((a, b) => new Date(b.posted) - new Date(a.posted));
+                        break;
+                    case 'budget_high':
+                        this.filteredNeeds.sort((a, b) => b.budget - a.budget);
+                        break;
+                    case 'budget_low':
+                        this.filteredNeeds.sort((a, b) => a.budget - b.budget);
+                        break;
+                    case 'urgent':
+                        this.filteredNeeds.sort((a, b) => (b.urgent ? 1 : 0) - (a.urgent ? 1 : 0));
+                        break;
+                }
+            }
+            
+            renderNeeds() {
+                const grid = document.getElementById('needsGrid');
+                const noNeeds = document.getElementById('noNeeds');
+                
+                if (this.filteredNeeds.length === 0) {
+                    grid.style.display = 'none';
+                    noNeeds.style.display = 'block';
+                    document.getElementById('needsCount').textContent = '0 needs found';
+                    return;
+                }
+                
+                grid.style.display = 'grid';
+                noNeeds.style.display = 'none';
+                
+                const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+                const endIndex = startIndex + this.itemsPerPage;
+                const pageNeeds = this.filteredNeeds.slice(startIndex, endIndex);
+                
+                grid.innerHTML = pageNeeds.map(need => `
+                    <div class="need-card" data-id="${need.id}">
+                        <div class="need-status ${need.urgent ? 'status-urgent' : 'status-active'}">
+                            ${need.urgent ? 'URGENT' : 'ACTIVE'}
+                        </div>
+                        <div class="need-content">
+                            <div class="need-header">
+                                <h3 class="need-title">${need.title}</h3>
+                                <span class="need-budget">KSh ${need.budget.toLocaleString()}</span>
+                            </div>
+                            <p class="need-description">${need.description}</p>
+                            <div class="need-details">
+                                <div class="need-detail">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>${need.location}</span>
+                                </div>
+                                <div class="need-detail">
+                                    <i class="far fa-clock"></i>
+                                    <span>${need.timeframe.charAt(0).toUpperCase() + need.timeframe.slice(1)}</span>
+                                </div>
+                                <div class="need-detail">
+                                    <i class="fas fa-tag"></i>
+                                    <span>${need.category.charAt(0).toUpperCase() + need.category.slice(1)}</span>
+                                </div>
+                            </div>
+                            <div class="need-actions">
+                                <button class="btn-unlock" onclick="browsePage.showUnlockModal(${need.id})">
+                                    <i class="fas fa-unlock"></i> Unlock (KSh 100)
+                                </button>
+                                <button class="btn-save" onclick="browsePage.saveNeed(${need.id})">
+                                    <i class="far fa-bookmark"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                document.getElementById('needsCount').textContent = 
+                    `Showing ${startIndex + 1}-${Math.min(endIndex, this.filteredNeeds.length)} of ${this.filteredNeeds.length} needs`;
+            }
+            
+            renderPagination() {
+                const pagination = document.getElementById('pagination');
+                const totalPages = Math.ceil(this.filteredNeeds.length / this.itemsPerPage);
+                
+                if (totalPages <= 1) {
+                    pagination.innerHTML = '';
+                    return;
+                }
+                
+                let pageNumbers = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || (i >= this.currentPage - 1 && i <= this.currentPage + 1)) {
+                        pageNumbers += `
+                            <span class="page-number ${i === this.currentPage ? 'active' : ''}" 
+                                  onclick="browsePage.goToPage(${i})">
+                                ${i}
+                            </span>
+                        `;
+                    } else if (i === this.currentPage - 2 || i === this.currentPage + 2) {
+                        pageNumbers += '<span class="page-number">...</span>';
+                    }
+                }
+                
+                pagination.innerHTML = `
+                    <button onclick="browsePage.prevPage()" ${this.currentPage === 1 ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <div class="page-numbers">
+                        ${pageNumbers}
+                    </div>
+                    <button onclick="browsePage.nextPage()" ${this.currentPage === totalPages ? 'disabled' : ''}>
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                `;
+            }
+            
+            goToPage(page) {
+                this.currentPage = page;
+                this.renderNeeds();
+                this.renderPagination();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            prevPage() {
+                if (this.currentPage > 1) {
+                    this.currentPage--;
+                    this.renderNeeds();
+                    this.renderPagination();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+            
+            nextPage() {
+                const totalPages = Math.ceil(this.filteredNeeds.length / this.itemsPerPage);
+                if (this.currentPage < totalPages) {
+                    this.currentPage++;
+                    this.renderNeeds();
+                    this.renderPagination();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+            
+            showUnlockModal(needId) {
+                const modal = document.getElementById('unlockModal');
+                modal.style.display = 'block';
+                modal.dataset.needId = needId;
+            }
+            
+            hideModal() {
+                document.getElementById('unlockModal').style.display = 'none';
+            }
+            
+            confirmUnlock() {
+                const mpesaCode = document.getElementById('mpesaCode').value;
+                const needId = document.getElementById('unlockModal').dataset.needId;
+                
+                if (!mpesaCode) {
+                    alert('Please enter M-Pesa transaction code');
+                    return;
+                }
+                
+                // In production, verify with backend
+                alert('Contact details unlocked successfully! You can now contact the asker.');
+                this.hideModal();
+                
+                // Clear input
+                document.getElementById('mpesaCode').value = '';
+            }
+            
+            saveNeed(needId) {
+                const savedNeeds = JSON.parse(localStorage.getItem('fulfillme_saved_needs') || '[]');
+                if (!savedNeeds.includes(needId)) {
+                    savedNeeds.push(needId);
+                    localStorage.setItem('fulfillme_saved_needs', JSON.stringify(savedNeeds));
+                    alert('Need saved to your favorites!');
+                } else {
+                    alert('This need is already saved.');
+                }
+            }
+        }
+        
+        // Initialize browse page
+        const browsePage = new BrowsePage();
+        window.browsePage = browsePage;
+        
+        // Add modal styles
+        const modalStyle = document.createElement('style');
+        modalStyle.textContent = `
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+            }
+            
+            .modal-content {
+                background: var(--white);
+                border-radius: var(--radius);
+                width: 90%;
+                max-width: 500px;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1.5rem;
+                border-bottom: 1px solid var(--light-gray);
+            }
+            
+            .modal-header h3 {
+                margin: 0;
+                color: var(--dark-gray);
+            }
+            
+            .modal-close {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: #666;
+            }
+            
+            .modal-body {
+                padding: 1.5rem;
+            }
+            
+            .modal-footer {
+                display: flex;
+                gap: 1rem;
+                padding: 1.5rem;
+                border-top: 1px solid var(--light-gray);
+            }
+            
+            .payment-methods {
+                display: flex;
+                gap: 1rem;
+                margin: 1rem 0;
+            }
+            
+            .payment-method {
+                flex: 1;
+                padding: 1rem;
+                border: 2px solid var(--light-gray);
+                border-radius: var(--radius);
+                text-align: center;
+                cursor: pointer;
+                transition: var(--transition);
+            }
+            
+            .payment-method.active {
+                border-color: var(--forest-green);
+                background-color: rgba(34, 139, 34, 0.1);
+            }
+            
+            .payment-method i {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+                display: block;
+            }
+            
+            .payment-instructions {
+                background: var(--light-gray);
+                padding: 1rem;
+                border-radius: var(--radius);
+                margin: 1rem 0;
+            }
+            
+            .payment-instructions ol {
+                margin: 0.5rem 0 0 1.5rem;
+            }
+            
+            .btn-cancel {
+                flex: 1;
+                padding: 0.75rem;
+                background-color: var(--light-gray);
+                color: var(--dark-gray);
+                border: none;
+                border-radius: var(--radius);
+                font-weight: 600;
+                cursor: pointer;
+            }
+            
+            .btn-confirm {
+                flex: 2;
+                padding: 0.75rem;
+                background-color: var(--forest-green);
+                color: var(--white);
+                border: none;
+                border-radius: var(--radius);
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+            
+            .form-group {
+                margin: 1rem 0;
+            }
+            
+            .form-group label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: 600;
+            }
+            
+            .form-group input {
+                width: 100%;
+                padding: 0.75rem;
+                border: 2px solid var(--light-gray);
+                border-radius: var(--radius);
+            }
+        `;
+        document.head.appendChild(modalStyle);
+    </script>
+</body>
+</html>

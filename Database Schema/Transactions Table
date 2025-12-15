@@ -1,0 +1,11 @@
+CREATE TABLE transactions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    fulfiller_id INT,
+    need_id INT,
+    amount DECIMAL(10,2),
+    status ENUM('pending', 'completed', 'failed'),
+    mpesa_code VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (fulfiller_id) REFERENCES users(id),
+    FOREIGN KEY (need_id) REFERENCES needs(id)
+);

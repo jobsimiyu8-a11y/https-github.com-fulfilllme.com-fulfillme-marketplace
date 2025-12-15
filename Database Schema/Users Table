@@ -1,0 +1,11 @@
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20),
+    full_name VARCHAR(100),
+    location VARCHAR(100),
+    national_id VARCHAR(20),
+    gender ENUM('male', 'female', 'other'),
+    user_type ENUM('asker', 'fulfiller'),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
